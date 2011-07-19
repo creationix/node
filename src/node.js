@@ -42,6 +42,8 @@
 
     startup.resolveArgv0();
 
+    startup.customRuntimeMain();
+
     if (startup.runThirdPartyMain()) {
       return;
     }
@@ -299,6 +301,13 @@
       var path = NativeModule.require('path');
       process.argv[0] = path.join(cwd, process.argv[0]);
     }
+  };
+
+  startup.customRuntimeMain = function () {
+    var path = NativeModule.require('path');
+    var custom = path.resolve(process.cwd(), process.argv[0] + ".js");
+    if (!path.existsSync(custom)) return;
+    process.argv[1] = custom;
   };
 
   startup.runThirdPartyMain = function() {
